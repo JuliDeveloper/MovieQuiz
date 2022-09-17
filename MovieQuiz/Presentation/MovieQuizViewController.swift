@@ -92,22 +92,23 @@ final class MovieQuizViewController: UIViewController {
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        checkResponse(sender)
+        checkResponse(sender, userChoice: true)
     }
 
     @IBAction private func noButtonClicked(_ sender: UIButton) {
-        checkResponse(sender)
+        checkResponse(sender, userChoice: false)
     }
     
-    private func checkResponse(_ button: UIButton) {
-        if button.currentTitle == "Нет" {
-            let userResponse = QuizResultResponseViewModel(isCorrect: questions[currentQuestionIndex].correctAnswer ? false : true).isCorrect
-            showAnswerResult(isCorrect: userResponse, button: button)
-        } else {
-            let userResponse = QuizResultResponseViewModel(isCorrect: questions[currentQuestionIndex].correctAnswer ? true : false).isCorrect
-            showAnswerResult(isCorrect: userResponse, button: button)
-        }
-        button.isEnabled = false
+    private func checkResponse(_ button: UIButton, userChoice: Bool) {
+        let responseStateModel = saveStateUserAnswer(userChoice: userChoice)
+        let isCorrectAnswer = responseStateModel.isCorrect == questions[currentQuestionIndex].correctAnswer
+        
+        showAnswerResult(isCorrect: isCorrectAnswer, button: button)
+        toggleStateButton(button, false)
+    }
+    
+    private func saveStateUserAnswer(userChoice: Bool) -> QuizResultResponseViewModel {
+        QuizResultResponseViewModel(isCorrect: userChoice)
     }
     
     private func show(quiz step: QuizStepViewModel) {
@@ -154,8 +155,12 @@ final class MovieQuizViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             self?.showNextQuestionOrResults()
             self?.posterImageView.layer.borderWidth = 0
-            button.isEnabled = true
+            self?.toggleStateButton(button, true)
         }
+    }
+    
+    private func toggleStateButton(_ button: UIButton, _ state: Bool) {
+        button.isEnabled = state
     }
     
     private func showNextQuestionOrResults() {
