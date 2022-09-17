@@ -102,11 +102,12 @@ final class MovieQuizViewController: UIViewController {
     private func checkResponse(_ button: UIButton) {
         if button.currentTitle == "Нет" {
             let userResponse = QuizResultResponseViewModel(isCorrect: questions[currentQuestionIndex].correctAnswer ? false : true).isCorrect
-            showAnswerResult(isCorrect: userResponse)
+            showAnswerResult(isCorrect: userResponse, button: button)
         } else {
             let userResponse = QuizResultResponseViewModel(isCorrect: questions[currentQuestionIndex].correctAnswer ? true : false).isCorrect
-            showAnswerResult(isCorrect: userResponse)
+            showAnswerResult(isCorrect: userResponse, button: button)
         }
+        button.isEnabled = false
     }
     
     private func show(quiz step: QuizStepViewModel) {
@@ -137,7 +138,7 @@ final class MovieQuizViewController: UIViewController {
             questionNumber: "\(currentQuestionIndex + 1)/\(questions.count)")
     }
     
-    private func showAnswerResult(isCorrect: Bool) {
+    private func showAnswerResult(isCorrect: Bool, button: UIButton) {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
         imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
@@ -148,7 +149,8 @@ final class MovieQuizViewController: UIViewController {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.showNextQuestionOrResults()
-            self.imageView.layer.borderColor = .none
+            self.imageView.layer.borderWidth = 0
+            button.isEnabled = true
         }
     }
     
