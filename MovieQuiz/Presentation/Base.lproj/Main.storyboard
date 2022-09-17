@@ -127,7 +127,7 @@
                     </view>
                     <connections>
                         <outlet property="counterLabel" destination="COt-Pu-01B" id="wWz-Zr-amO"/>
-                        <outlet property="imageView" destination="Dwx-ZU-gUB" id="U85-8e-B7h"/>
+                        <outlet property="posterImageView" destination="Dwx-ZU-gUB" id="U85-8e-B7h"/>
                         <outlet property="textLabel" destination="hAB-y7-FCe" id="YyA-NH-A5l"/>
                     </connections>
                 </viewController>

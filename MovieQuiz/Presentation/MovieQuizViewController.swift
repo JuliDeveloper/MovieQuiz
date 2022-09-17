@@ -24,8 +24,8 @@ struct QuizResultResponseViewModel {
 
 final class MovieQuizViewController: UIViewController {
     
-    @IBOutlet private var imageView: UIImageView!
-    @IBOutlet private var textLabel: UILabel!
+    @IBOutlet private var posterImageView: UIImageView!
+    @IBOutlet private var questionTextLabel: UILabel!
     @IBOutlet private var counterLabel: UILabel!
     
     private let questions: [QuizQuestion] = [
@@ -86,7 +86,7 @@ final class MovieQuizViewController: UIViewController {
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageView.layer.cornerRadius = 20
+        posterImageView.layer.cornerRadius = 20
         
         show(quiz: convert(model: questions[currentQuestionIndex]))
     }
@@ -111,8 +111,8 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func show(quiz step: QuizStepViewModel) {
-        imageView.image = UIImage(named: questions[currentQuestionIndex].image)
-        textLabel.text = "\(questions[currentQuestionIndex].text)"
+        posterImageView.image = UIImage(named: questions[currentQuestionIndex].image)
+        questionTextLabel.text = "\(questions[currentQuestionIndex].text)"
         counterLabel.text = "\(currentQuestionIndex + 1)/\(questions.count)"
     }
 
@@ -139,9 +139,9 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func showAnswerResult(isCorrect: Bool, button: UIButton) {
-        imageView.layer.masksToBounds = true
-        imageView.layer.borderWidth = 8
-        imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
+        posterImageView.layer.masksToBounds = true
+        posterImageView.layer.borderWidth = 8
+        posterImageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
         
         if isCorrect {
             correctAnswers += 1
@@ -149,7 +149,7 @@ final class MovieQuizViewController: UIViewController {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.showNextQuestionOrResults()
-            self.imageView.layer.borderWidth = 0
+            self.posterImageView.layer.borderWidth = 0
             button.isEnabled = true
         }
     }
