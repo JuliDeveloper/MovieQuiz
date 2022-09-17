@@ -122,6 +122,7 @@
                             <constraint firstItem="ZGM-jj-t9E" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="2vx-Ht-2Xw"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="ZGM-jj-t9E" secondAttribute="trailing" constant="20" id="Ap5-IC-KKI"/>
                             <constraint firstItem="ZGM-jj-t9E" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Wzu-n6-4Qn"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="ZGM-jj-t9E" secondAttribute="bottom" constant="29" id="hHk-d3-nAk"/>
                         </constraints>
                     </view>
                     <connections>
