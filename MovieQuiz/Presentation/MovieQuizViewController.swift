@@ -121,14 +121,18 @@ final class MovieQuizViewController: UIViewController {
             title: result.title,
             message: result.text,
             preferredStyle: .alert)
-        let action = UIAlertAction(title: "Сыграть ещё раз", style: .default) { _ in
-            self.currentQuestionIndex = 0
-            self.correctAnswers = 0
-            self.show(quiz: self.convert(model: self.questions[self.currentQuestionIndex]))
+        let action = UIAlertAction(title: "Сыграть ещё раз", style: .default) { [weak self] _ in
+            self?.restartQuiz()
         }
         
         alert.addAction(action)
         present(alert, animated: true)
+    }
+    
+    private func restartQuiz() {
+        currentQuestionIndex = 0
+        correctAnswers = 0
+        show(quiz: self.convert(model: self.questions[self.currentQuestionIndex]))
     }
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
@@ -147,9 +151,9 @@ final class MovieQuizViewController: UIViewController {
             correctAnswers += 1
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.showNextQuestionOrResults()
-            self.posterImageView.layer.borderWidth = 0
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            self?.showNextQuestionOrResults()
+            self?.posterImageView.layer.borderWidth = 0
             button.isEnabled = true
         }
     }
