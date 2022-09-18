@@ -24,11 +24,11 @@ struct QuizResultResponseViewModel {
 
 final class MovieQuizViewController: UIViewController {
     
-    @IBOutlet private var posterImageView: UIImageView!
-    @IBOutlet private var questionTextLabel: UILabel!
-    @IBOutlet private var counterLabel: UILabel!
-    @IBOutlet weak var incorrectButton: UIButton!
-    @IBOutlet weak var correctButton: UIButton!
+    @IBOutlet private weak var posterImageView: UIImageView!
+    @IBOutlet private weak var questionTextLabel: UILabel!
+    @IBOutlet private weak var counterLabel: UILabel!
+    @IBOutlet private weak var incorrectButton: UIButton!
+    @IBOutlet private weak var correctButton: UIButton!
     
     private let questions: [QuizQuestion] = [
         QuizQuestion(
@@ -105,7 +105,7 @@ final class MovieQuizViewController: UIViewController {
         let responseStateModel = saveStateUserAnswer(userChoice: userChoice)
         let isCorrectAnswer = responseStateModel.isCorrect == questions[currentQuestionIndex].correctAnswer
         
-        showAnswerResult(isCorrect: isCorrectAnswer, button: button)
+        showAnswerResult(isCorrect: isCorrectAnswer)
         toggleStateButton(false)
     }
     
@@ -145,7 +145,7 @@ final class MovieQuizViewController: UIViewController {
             questionNumber: "\(currentQuestionIndex + 1)/\(questions.count)")
     }
     
-    private func showAnswerResult(isCorrect: Bool, button: UIButton) {
+    private func showAnswerResult(isCorrect: Bool) {
         posterImageView.layer.masksToBounds = true
         posterImageView.layer.borderWidth = 8
         posterImageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
