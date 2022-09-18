@@ -126,7 +126,9 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="correctButton" destination="72G-dU-rxD" id="a9u-Xb-ZCw"/>
                         <outlet property="counterLabel" destination="COt-Pu-01B" id="wWz-Zr-amO"/>
+                        <outlet property="incorrectButton" destination="lmt-O6-wYr" id="70r-6I-PwW"/>
                         <outlet property="posterImageView" destination="Dwx-ZU-gUB" id="U85-8e-B7h"/>
                         <outlet property="questionTextLabel" destination="hAB-y7-FCe" id="Bik-BT-ygm"/>
                     </connections>

@@ -27,6 +27,8 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private var posterImageView: UIImageView!
     @IBOutlet private var questionTextLabel: UILabel!
     @IBOutlet private var counterLabel: UILabel!
+    @IBOutlet weak var incorrectButton: UIButton!
+    @IBOutlet weak var correctButton: UIButton!
     
     private let questions: [QuizQuestion] = [
         QuizQuestion(
@@ -104,7 +106,7 @@ final class MovieQuizViewController: UIViewController {
         let isCorrectAnswer = responseStateModel.isCorrect == questions[currentQuestionIndex].correctAnswer
         
         showAnswerResult(isCorrect: isCorrectAnswer, button: button)
-        toggleStateButton(button, false)
+        toggleStateButton(false)
     }
     
     private func saveStateUserAnswer(userChoice: Bool) -> QuizResultResponseViewModel {
@@ -155,12 +157,13 @@ final class MovieQuizViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             self?.showNextQuestionOrResults()
             self?.posterImageView.layer.borderWidth = 0
-            self?.toggleStateButton(button, true)
+            self?.toggleStateButton(true)
         }
     }
     
-    private func toggleStateButton(_ button: UIButton, _ state: Bool) {
-        button.isEnabled = state
+    private func toggleStateButton(_ state: Bool) {
+        incorrectButton.isEnabled = state
+        correctButton.isEnabled = state
     }
     
     private func showNextQuestionOrResults() {
