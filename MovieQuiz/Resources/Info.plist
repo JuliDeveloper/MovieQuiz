@@ -4,11 +4,11 @@
 <dict>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
-        <key>UIAppFonts</key>
-             <array>
-                 <string>YS Display-Bold</string>
-                 <string>YS Display-Medium</string>
-        </array>
+		<key>UIAppFonts</key>
+		<array>
+			<string>YS Display-Bold</string>
+			<string>YS Display-Medium</string>
+		</array>
 		<key>UIApplicationSupportsMultipleScenes</key>
 		<false/>
 		<key>UISceneConfigurations</key>
@@ -26,5 +26,7 @@
 			</array>
 		</dict>
 	</dict>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleDefault</string>
 </dict>
 </plist>
