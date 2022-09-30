@@ -125,7 +125,8 @@ final class MovieQuizViewController: UIViewController {
             message: result.text,
             preferredStyle: .alert)
         let action = UIAlertAction(title: "Сыграть ещё раз", style: .default) { [weak self] _ in
-            self?.restartQuiz()
+            guard let self = self else { return }
+            self.restartQuiz()
         }
         
         alert.addAction(action)
@@ -155,9 +156,10 @@ final class MovieQuizViewController: UIViewController {
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            self?.showNextQuestionOrResults()
-            self?.posterImageView.layer.borderWidth = 0
-            self?.toggleStateButton(true)
+            guard let self = self else { return }
+            self.showNextQuestionOrResults()
+            self.posterImageView.layer.borderWidth = 0
+            self.toggleStateButton(true)
         }
     }
     
