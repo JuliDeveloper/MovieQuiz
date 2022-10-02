@@ -21,10 +21,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         posterImageView.layer.cornerRadius = 20
         
         questionFactory = QuestionFactory(delegate: self)
-        
         questionFactory?.requestNextQuestion()
     }
     
+    // MARK: - Actions
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
         checkResponse(sender, userChoice: true)
     }
@@ -33,6 +33,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         checkResponse(sender, userChoice: false)
     }
     
+    // MARK: - Private functions
     private func checkResponse(_ button: UIButton, userChoice: Bool) {
         guard let currentQuestion = currentQuestion else { return }
 
@@ -123,6 +124,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         }
     }
     
+    // MARK: - QuestionFactoryDelegate
     func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question = question else { return }
         
