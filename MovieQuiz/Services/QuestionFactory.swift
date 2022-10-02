@@ -60,12 +60,15 @@ class QuestionFactory: QuestionFactoryProtocol {
             correctAnswer: false
         )
     ]
+    weak var delegate: QuestionFactoryDelegate?
     
-    func requestNextQuestion() -> QuizQuestion? {
-        guard let index = (0..<questions.count).randomElement() else {
-            return nil
-        }
-        
-        return questions[safe: index]
+    init(delegate: QuestionFactoryDelegate?) {
+        self.delegate = delegate
+    }
+    
+    func requestNextQuestion() {
+        let index = (0..<questions.count).randomElement() ?? 0
+            let question = questions[safe: index]
+            delegate?.didReceiveNextQuestion(question: question)
     }
 }
