@@ -1,6 +1,6 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
+final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, AlertPresenterDelegate {
     
     @IBOutlet private weak var posterImageView: UIImageView!
     @IBOutlet private weak var questionTextLabel: UILabel!
@@ -13,6 +13,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private let questionsAmount: Int = 10
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
+    private var alertPresenter: AlertPresenterProtocol?
     
     
     // MARK: - Lifecycle
@@ -22,6 +23,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         
         questionFactory = QuestionFactory(delegate: self)
         questionFactory?.requestNextQuestion()
+        
+        alertPresenter = AlertPresenter(delegate: self)
     }
     
     // MARK: - Actions
@@ -56,19 +59,17 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         questionTextLabel.text = "\(currentQuestion.text)"
         counterLabel.text = "\(currentQuestionIndex + 1)/\(questionsAmount)"
     }
-
+    
     private func show(quiz result: QuizResultsViewModel) {
-        let alert = UIAlertController(
+        alertPresenter?.create(model: AlertModel(
             title: result.title,
             message: result.text,
-            preferredStyle: .alert)
-        let action = UIAlertAction(title: "Сыграть ещё раз", style: .default) { [weak self] _ in
-            guard let self = self else { return }
-            self.restartQuiz()
-        }
-        
-        alert.addAction(action)
-        present(alert, animated: true)
+            buttonText: result.buttonText,
+            completion: { [weak self] _ in
+                guard let self = self else { return }
+                self.restartQuiz()
+            })
+        )
     }
     
     private func restartQuiz() {
@@ -134,5 +135,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         DispatchQueue.main.async { [weak self] in
             self?.show(quiz: viewModel)
         }
+    }
+    
+    func show(alert: UIAlertController) {
+        present(alert, animated: true)
     }
 }
