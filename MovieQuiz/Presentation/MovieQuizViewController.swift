@@ -10,13 +10,21 @@ final class MovieQuizViewController: UIViewController {
     
     private var currentQuestionIndex: Int = 0
     private var correctAnswers: Int = 0
+    private let questionsAmount: Int = 10
+    private var questionFactory: QuestionFactory = QuestionFactory()
+    private var currentQuestion: QuizQuestion?
+    
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         posterImageView.layer.cornerRadius = 20
         
-        show(quiz: convert(model: questions[currentQuestionIndex]))
+        if let firstQuestion = questionFactory.requestNextQuestion() {
+            self.currentQuestion = firstQuestion
+            let viewModel = convert(model: firstQuestion)
+            show(quiz: viewModel)
+        }
     }
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
@@ -28,8 +36,11 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func checkResponse(_ button: UIButton, userChoice: Bool) {
+        guard let currentQuestion = currentQuestion else { return }
+
+        
         let responseStateModel = saveStateUserAnswer(userChoice: userChoice)
-        let isCorrectAnswer = responseStateModel.isCorrect == questions[currentQuestionIndex].correctAnswer
+        let isCorrectAnswer = responseStateModel.isCorrect == currentQuestion.correctAnswer
         
         showAnswerResult(isCorrect: isCorrectAnswer)
         toggleStateButton(false)
@@ -40,9 +51,11 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func show(quiz step: QuizStepViewModel) {
-        posterImageView.image = UIImage(named: questions[currentQuestionIndex].image)
-        questionTextLabel.text = "\(questions[currentQuestionIndex].text)"
-        counterLabel.text = "\(currentQuestionIndex + 1)/\(questions.count)"
+        guard let currentQuestion = currentQuestion else { return }
+
+        posterImageView.image = UIImage(named: currentQuestion.image)
+        questionTextLabel.text = "\(currentQuestion.text)"
+        counterLabel.text = "\(currentQuestionIndex + 1)/\(questionsAmount)"
     }
 
     private func show(quiz result: QuizResultsViewModel) {
@@ -62,14 +75,21 @@ final class MovieQuizViewController: UIViewController {
     private func restartQuiz() {
         currentQuestionIndex = 0
         correctAnswers = 0
-        show(quiz: self.convert(model: self.questions[self.currentQuestionIndex]))
+        
+        if let firstQuestion = self.questionFactory.requestNextQuestion() {
+            self.currentQuestion = firstQuestion
+            let viewModel = self.convert(model: firstQuestion)
+            
+            self.show(quiz: viewModel)
+        }
     }
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        return QuizStepViewModel(
+        QuizStepViewModel(
             image: UIImage(named: model.image) ?? UIImage(),
             question: model.text,
-            questionNumber: "\(currentQuestionIndex + 1)/\(questions.count)")
+            questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)"
+        )
     }
     
     private func showAnswerResult(isCorrect: Bool) {
@@ -95,8 +115,10 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func showNextQuestionOrResults() {
-        if currentQuestionIndex == questions.count - 1 {
-            let text = "Ваш результат: \(correctAnswers) из \(questions.count)"
+        if currentQuestionIndex == questionsAmount - 1 {
+            let text = correctAnswers == questionsAmount ?
+                        "Поздравляем, Вы ответили на 10 из 10!" :
+                        "Вы ответили на \(correctAnswers) из 10, попробуйте ещё раз!"
             let viewModel = QuizResultsViewModel(
                 title: "Этот раунд окончен! ",
                 text: "\(text)",
@@ -104,71 +126,12 @@ final class MovieQuizViewController: UIViewController {
             show(quiz: viewModel)
         } else {
             currentQuestionIndex += 1
-            show(quiz: convert(model: questions[currentQuestionIndex]))
+            if let nextQuestion = questionFactory.requestNextQuestion() {
+                currentQuestion = nextQuestion
+                let viewModel = convert(model: nextQuestion)
+                
+                show(quiz: viewModel)
+            }
         }
     }
 }
-
-/*
- Mock-данные
- 
- 
- Картинка: The Godfather
- Настоящий рейтинг: 9,2
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
-
-
- Картинка: The Dark Knight
- Настоящий рейтинг: 9
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
-
-
- Картинка: Kill Bill
- Настоящий рейтинг: 8,1
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
-
-
- Картинка: The Avengers
- Настоящий рейтинг: 8
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
-
-
- Картинка: Deadpool
- Настоящий рейтинг: 8
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
-
-
- Картинка: The Green Knight
- Настоящий рейтинг: 6,6
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: ДА
-
-
- Картинка: Old
- Настоящий рейтинг: 5,8
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: НЕТ
-
-
- Картинка: The Ice Age Adventures of Buck Wild
- Настоящий рейтинг: 4,3
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: НЕТ
-
-
- Картинка: Tesla
- Настоящий рейтинг: 5,1
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: НЕТ
-
-
- Картинка: Vivarium
- Настоящий рейтинг: 5,8
- Вопрос: Рейтинг этого фильма больше чем 6?
- Ответ: НЕТ
- */
