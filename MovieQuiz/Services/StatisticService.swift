@@ -24,69 +24,60 @@ final class StatisticServiceImplementation: StatisticService {
     
     var correctAnswersCount: Int {
         get {
-            guard let data = userDefaults.data(forKey: Keys.correct.rawValue),
-                  let correct = try? JSONDecoder().decode(Int.self, from: data) else {
-                return 0
-            }
-            return correct
+            StorageManager.shared.loadInfo(
+                for: Keys.correct.rawValue,
+                and: Int.self
+            ) ?? 0
         }
         set {
-            guard let data = try? JSONEncoder().encode(newValue) else {
-                print("Невозможно сохранить результат")
-                return
-            }
-            userDefaults.set(data, forKey: Keys.correct.rawValue)
+            StorageManager.shared.saveNewInfo(
+                for: Keys.correct.rawValue,
+                from: newValue
+            )
         }
     }
     
     var totalAccuracy: Double {
         get {
-            guard let data = userDefaults.data(forKey: Keys.total.rawValue),
-                  let total = try? JSONDecoder().decode(Double.self, from: data) else {
-                return 0
-            }
-            return total
+            StorageManager.shared.loadInfo(
+                for: Keys.total.rawValue,
+                and: Double.self
+            ) ?? 0.0
         }
         set {
-            guard let data = try? JSONEncoder().encode(newValue) else {
-                print("Невозможно сохранить результат")
-                return
-            }
-            userDefaults.set(data, forKey: Keys.total.rawValue)
+            StorageManager.shared.saveNewInfo(
+                for: Keys.total.rawValue,
+                from: newValue
+            )
         }
     }
     
     var gamesCount: Int {
         get {
-            guard let data = userDefaults.data(forKey: Keys.gamesCount.rawValue),
-                  let count = try? JSONDecoder().decode(Int.self, from: data) else {
-                return 0
-            }
-            return count
+            StorageManager.shared.loadInfo(
+                for: Keys.gamesCount.rawValue,
+                and: Int.self
+            ) ?? 0
         }
         set {
-            guard let data = try? JSONEncoder().encode(newValue) else {
-                print("Невозможно сохранить результат")
-                return
-            }
-            userDefaults.set(data, forKey: Keys.gamesCount.rawValue)
+            StorageManager.shared.saveNewInfo(
+                for: Keys.gamesCount.rawValue,
+                from: newValue
+            )
         }
     }
     
     private(set) var bestGame: GameRecord {
         get {
-            guard let data = userDefaults.data(forKey: Keys.bestGame.rawValue),
-                  let record = try? JSONDecoder().decode(GameRecord.self, from: data) else {
-                return .init(correct: 0, total: 0, date: Date())
-            }
-            return record
+            StorageManager.shared.loadInfo(
+                for: Keys.bestGame.rawValue,
+                and: GameRecord.self
+            ) ?? GameRecord(correct: 0, total: 0, date: Date())
         }
-        set {
-            guard let data = try? JSONEncoder().encode(newValue) else {
-                print("Невозможно сохранить результат")
-                return
-            }
-            userDefaults.set(data, forKey: Keys.bestGame.rawValue)
+        set {StorageManager.shared.saveNewInfo(
+            for: Keys.bestGame.rawValue,
+            from: newValue
+        )
         }
     }
     
