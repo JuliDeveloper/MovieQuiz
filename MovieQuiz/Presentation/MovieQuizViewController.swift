@@ -113,12 +113,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     
     private func showNextQuestionOrResults() {
         if currentQuestionIndex == questionsAmount - 1 {
-            statisticService?.store(correct: correctAnswers, total: questionsAmount)
+            guard let statisticService = statisticService else { return }
+            statisticService.store(correct: correctAnswers, total: questionsAmount)
             
             let message = "Ваш результат: \(correctAnswers)/\(questionsAmount)\n" +
-            "Количество сыгранных квизов: \(statisticService?.gamesCount ?? 0)\n" +
-            "Рекорд: \(statisticService?.bestGame.correct ?? 0)/\(questionsAmount) (\(statisticService?.bestGame.date.dateTimeString ?? ""))\n" +
-            "Cредняя точность: \(String(format: "%.2f", statisticService?.totalAccuracy ?? 0.0))%"
+            "Количество сыгранных квизов: \(statisticService.gamesCount )\n" +
+            "Рекорд: \(statisticService.bestGame.correct )/\(questionsAmount) (\(statisticService.bestGame.date.dateTimeString ))\n" +
+            "Cредняя точность: \(String(format: "%.2f", statisticService.totalAccuracy ))%"
             
             let viewModel = QuizResultsViewModel(
                 title: "Этот раунд окончен! ",
