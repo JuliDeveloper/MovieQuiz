@@ -138,11 +138,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     private func showLoadingIndicator() {
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
+        toggleStateButton(false)
     }
     
     private func hideLoadingIndicator() {
         activityIndicator.isHidden = true
         activityIndicator.stopAnimating()
+        toggleStateButton(true)
     }
     
     private func showNetworkError(message: String) {
@@ -154,7 +156,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             buttonText: "Попробовать еще раз",
             completion: { [weak self] _ in
                 guard let self = self else { return }
-                self.restartQuiz()
+                self.showLoadingIndicator()
+                self.questionFactory?.loadData()
             })
         )
     }
@@ -181,6 +184,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         showNetworkError(message: error.localizedDescription)
     }
     
+    // MARK: - AlertPresenterDelegate
     func show(alert: UIAlertController) {
         present(alert, animated: true)
     }
