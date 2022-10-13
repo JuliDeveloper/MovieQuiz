@@ -23,8 +23,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         super.viewDidLoad()
         posterImageView.layer.cornerRadius = 20
         
-        questionFactory = QuestionFactory(delegate: self)
-        questionFactory?.requestNextQuestion()
+        showLoadingIndicator()
+        
+        questionFactory = QuestionFactory(moviesLoader:  MoviesLoader(), delegate: self)
+        questionFactory?.loadData()
         
         alertPresenter = AlertPresenter(delegate: self)
         statisticService = StatisticServiceImplementation()
@@ -58,7 +60,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     private func show(quiz step: QuizStepViewModel) {
         guard let currentQuestion = currentQuestion else { return }
 
-        posterImageView.image = UIImage(named: currentQuestion.image)
+        posterImageView.image = UIImage(data: currentQuestion.image)
         questionTextLabel.text = "\(currentQuestion.text)"
         counterLabel.text = "\(currentQuestionIndex + 1)/\(questionsAmount)"
     }
@@ -84,7 +86,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         QuizStepViewModel(
-            image: UIImage(named: model.image) ?? UIImage(),
+            image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)"
         )
@@ -168,6 +170,15 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             guard let self = self else { return }
             self.show(quiz: viewModel)
         }
+    }
+    
+    func didLoadDataFromServer() {
+        hideLoadingIndicator()
+        questionFactory?.requestNextQuestion()
+    }
+    
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription)
     }
     
     func show(alert: UIAlertController) {
