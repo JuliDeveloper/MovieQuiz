@@ -142,8 +142,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     }
     
     private func hideLoadingIndicator() {
-        activityIndicator.isHidden = true
         activityIndicator.stopAnimating()
+        activityIndicator.hidesWhenStopped = true
         toggleStateButton(true)
     }
     

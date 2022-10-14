@@ -78,13 +78,13 @@ class QuestionFactory: QuestionFactoryProtocol {
             
             guard let movie = self.movies[safe: index] else { return }
             
-            var imageData = Data()
-            
-            do {
-                imageData = try Data(contentsOf: movie.resizedImageURL)
-            } catch {
-                print("Failed to load image")
-            }
+            let imageData: Data
+                do {
+                    imageData = try Data(contentsOf: movie.resizedImageURL)
+                } catch {
+                    imageData = Data()
+                    print("Failed to load image")
+                }
             
             let rating = Float(movie.rating) ?? 0
             let randomRating = Int.random(in: 5...9)
