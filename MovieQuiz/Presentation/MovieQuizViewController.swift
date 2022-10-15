@@ -152,7 +152,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         
         alertPresenter?.create(model: AlertModel(
             title: "Ошибка",
-            message: "",
+            message: message,
             buttonText: "Попробовать еще раз",
             completion: { [weak self] _ in
                 guard let self = self else { return }
