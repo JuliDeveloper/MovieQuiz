@@ -125,7 +125,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             "Cредняя точность: \(String(format: "%.2f", statisticService.totalAccuracy ))%"
             
             let viewModel = QuizResultsViewModel(
-                title: "Этот раунд окончен! ",
+                title: "Этот раунд окончен!",
                 text: "\(message)",
                 buttonText: "Сыграть еще раз")
             show(quiz: viewModel)

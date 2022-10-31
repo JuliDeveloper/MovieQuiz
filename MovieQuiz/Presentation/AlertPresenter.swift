@@ -21,7 +21,7 @@ struct AlertPresenter: AlertPresenterProtocol {
             message: model.message,
             preferredStyle: .alert)
         let action = UIAlertAction(title: model.buttonText, style: .default, handler: model.completion)
-        
+        alert.view.accessibilityIdentifier = "Results"
         alert.addAction(action)
         delegate?.show(alert: alert)
     }
