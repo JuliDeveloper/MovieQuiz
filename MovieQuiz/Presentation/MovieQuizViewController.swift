@@ -1,6 +1,6 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
+final class MovieQuizViewController: UIViewController, MovieQuizViewControllerProtocol, AlertPresenterDelegate {
     
     // MARK: - Properties
     @IBOutlet private weak var posterImageView: UIImageView!
