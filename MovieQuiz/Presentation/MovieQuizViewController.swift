@@ -24,6 +24,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         
         showLoadingIndicator()
         
+        presenter.viewController = self
+        
         questionFactory = QuestionFactory(moviesLoader:  MoviesLoader(), delegate: self)
         questionFactory?.loadData()
         
@@ -32,30 +34,18 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     }
     
     // MARK: - Actions
-    @IBAction private func yesButtonClicked(_ sender: UIButton) {
-        checkResponse(sender, userChoice: true)
+    
+    @IBAction func yesButtonClicked() {
+        presenter.currentQuestion = currentQuestion
+        presenter.yesButtonClicked(correctButton)
     }
-
-    @IBAction private func noButtonClicked(_ sender: UIButton) {
-        checkResponse(sender, userChoice: false)
+    
+    @IBAction func noButtonClicked() {
+        presenter.currentQuestion = currentQuestion
+        presenter.noButtonClicked(incorrectButton)
     }
     
     // MARK: - Private functions
-    private func checkResponse(_ button: UIButton, userChoice: Bool) {
-        guard let currentQuestion = currentQuestion else { return }
-
-        
-        let responseStateModel = saveStateUserAnswer(userChoice: userChoice)
-        let isCorrectAnswer = responseStateModel.isCorrect == currentQuestion.correctAnswer
-        
-        showAnswerResult(isCorrect: isCorrectAnswer)
-        toggleStateButton(false)
-    }
-    
-    private func saveStateUserAnswer(userChoice: Bool) -> QuizResultResponseViewModel {
-        QuizResultResponseViewModel(isCorrect: userChoice)
-    }
-    
     private func show(quiz step: QuizStepViewModel) {
         posterImageView.image = step.image
         questionTextLabel.text = step.question
@@ -81,7 +71,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         questionFactory?.requestNextQuestion()
     }
     
-    private func showAnswerResult(isCorrect: Bool) {
+    func showAnswerResult(isCorrect: Bool) {
         posterImageView.layer.masksToBounds = true
         posterImageView.layer.borderWidth = 8
         posterImageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
@@ -98,7 +88,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         }
     }
     
-    private func toggleStateButton(_ state: Bool) {
+    func toggleStateButton(_ state: Bool) {
         incorrectButton.isEnabled = state
         correctButton.isEnabled = state
     }
