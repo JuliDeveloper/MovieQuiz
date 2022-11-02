@@ -43,7 +43,9 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     }
     
     func didAnswer(isCorrectAnswer: Bool) {
-        correctAnswers += 1
+        if isCorrectAnswer {
+            correctAnswers += 1
+        }
     }
     
     func convert(model: QuizQuestion) -> QuizStepViewModel {
@@ -68,7 +70,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         let responseStateModel = saveStateUserAnswer(userChoice: userChoice)
         let isCorrectAnswer = responseStateModel.isCorrect == currentQuestion.correctAnswer
 
-        viewController?.showAnswerResult(isCorrect: isCorrectAnswer)
+        proceedWithAnswer(isCorrect: isCorrectAnswer)
         viewController?.toggleStateButton(false)
     }
 
@@ -76,7 +78,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         QuizResultResponseViewModel(isCorrect: userChoice)
     }
     
-    func showNextQuestionOrResults() {
+    func proceedToNextQuestionOrResults() {
         if isLastQuestion() {
             guard let statisticService = statisticService else { return }
             statisticService.store(correct: correctAnswers, total: questionsAmount)
@@ -94,6 +96,17 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         } else {
             self.switchToNextQuestion()
             questionFactory?.requestNextQuestion()
+        }
+    }
+    
+    func proceedWithAnswer(isCorrect: Bool) {
+        didAnswer(isCorrectAnswer: isCorrect)
+        viewController?.highlightImageBorder(isCorrect: isCorrect)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            guard let self = self else { return }
+            self.proceedToNextQuestionOrResults()
+            self.viewController?.toggleStateButton(true)
         }
     }
     

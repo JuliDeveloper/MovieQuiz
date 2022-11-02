@@ -23,7 +23,6 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
     }
     
     // MARK: - Actions
-    
     @IBAction func yesButtonClicked() {
         presenter?.yesButtonClicked(correctButton)
     }
@@ -32,7 +31,7 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
         presenter?.noButtonClicked(incorrectButton)
     }
     
-    // MARK: - Private functions
+    // MARK: - Functions
     func show(quiz step: QuizStepViewModel) {
         posterImageView.image = step.image
         questionTextLabel.text = step.question
@@ -51,22 +50,14 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
         )
     }
     
-    private func restartQuiz() {
-        presenter?.restartGame()
-    }
-    
-    func showAnswerResult(isCorrect: Bool) {
+    func highlightImageBorder(isCorrect: Bool) {
         posterImageView.layer.masksToBounds = true
         posterImageView.layer.borderWidth = 8
         posterImageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
         
-        presenter?.didAnswer(isCorrectAnswer: isCorrect)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            guard let self = self else { return }
-            self.presenter?.showNextQuestionOrResults()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.posterImageView.layer.borderWidth = 0
-            self.toggleStateButton(true)
+
         }
     }
     
@@ -74,27 +65,6 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
         incorrectButton.isEnabled = state
         correctButton.isEnabled = state
     }
-    
-//    private func showNextQuestionOrResults() {
-//        if presenter.isLastQuestion() {
-//            guard let statisticService = statisticService else { return }
-//            statisticService.store(correct: correctAnswers, total: presenter.questionsAmount)
-//            
-//            let message = "Ваш результат: \(correctAnswers)/\(presenter.questionsAmount)\n" +
-//            "Количество сыгранных квизов: \(statisticService.gamesCount )\n" +
-//            "Рекорд: \(statisticService.bestGame.correct )/\(presenter.questionsAmount) (\(statisticService.bestGame.date.dateTimeString ))\n" +
-//            "Cредняя точность: \(String(format: "%.2f", statisticService.totalAccuracy ))%"
-//            
-//            let viewModel = QuizResultsViewModel(
-//                title: "Этот раунд окончен!",
-//                text: "\(message)",
-//                buttonText: "Сыграть еще раз")
-//            show(quiz: viewModel)
-//        } else {
-//            presenter.switchToNextQuestion()
-//            questionFactory?.requestNextQuestion()
-//        }
-//    }
     
     func showLoadingIndicator() {
         activityIndicator.isHidden = false
@@ -123,14 +93,9 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
         )
     }
     
-    // MARK: - QuestionFactoryDelegate
-    func didReceiveNextQuestion(question: QuizQuestion?) {
-        presenter?.didReceiveNextQuestion(question: question)
+    private func restartQuiz() {
+        presenter?.restartGame()
     }
-    
-//    func didFailToLoadData(with error: Error) {
-//        showNetworkError(message: error.localizedDescription)
-//    }
     
     // MARK: - AlertPresenterDelegate
     func show(alert: UIAlertController) {
