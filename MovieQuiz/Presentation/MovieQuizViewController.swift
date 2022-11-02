@@ -2,6 +2,7 @@ import UIKit
 
 final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
     
+    // MARK: - Properties
     @IBOutlet private weak var posterImageView: UIImageView!
     @IBOutlet private weak var questionTextLabel: UILabel!
     @IBOutlet private weak var counterLabel: UILabel!
@@ -16,7 +17,6 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         posterImageView.layer.cornerRadius = 20
-        showLoadingIndicator()
         
         presenter = MovieQuizPresenter(viewController: self)
         alertPresenter = AlertPresenter(delegate: self)
@@ -88,7 +88,6 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
             completion: { [weak self] _ in
                 guard let self = self else { return }
                 self.showLoadingIndicator()
-                self.presenter?.questionFactory?.loadData()
             })
         )
     }

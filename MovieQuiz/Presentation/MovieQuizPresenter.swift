@@ -9,25 +9,27 @@ import UIKit
 
 final class MovieQuizPresenter: QuestionFactoryDelegate {
     
-    let questionsAmount: Int = 10
+    // MARK: - Properties
+    private let questionsAmount: Int = 10
+    private var correctAnswers: Int = 0
     private var currentQuestionIndex: Int = 0
-    var correctAnswers: Int = 0
 
-    weak var viewController: MovieQuizViewController?
-    var questionFactory: QuestionFactoryProtocol?
-    var currentQuestion: QuizQuestion?
+    private weak var viewController: MovieQuizViewController?
+    private var questionFactory: QuestionFactoryProtocol?
+    private var currentQuestion: QuizQuestion?
     private var statisticService: StatisticService?
     
+    // MARK: - Lifecycle
     init(viewController: MovieQuizViewController) {
         self.viewController = viewController
         
         statisticService = StatisticServiceImplementation()
-        
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         questionFactory?.loadData()
         viewController.showLoadingIndicator()
     }
     
+    // MARK: - Functions
     func isLastQuestion() -> Bool {
         currentQuestionIndex == questionsAmount - 1
     }
