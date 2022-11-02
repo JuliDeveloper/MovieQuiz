@@ -57,10 +57,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     }
     
     private func show(quiz step: QuizStepViewModel) {
-        guard let currentQuestion = currentQuestion else { return }
-
-        posterImageView.image = UIImage(data: currentQuestion.image)
-        questionTextLabel.text = "\(currentQuestion.text)"
+        posterImageView.image = step.image
+        questionTextLabel.text = step.question
         counterLabel.text = step.questionNumber
     }
     
