@@ -11,19 +11,15 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
         
     private var presenter: MovieQuizPresenter?
     private var alertPresenter: AlertPresenterProtocol?
-    private var statisticService: StatisticService?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         posterImageView.layer.cornerRadius = 20
-        
         showLoadingIndicator()
         
         presenter = MovieQuizPresenter(viewController: self)
-        
         alertPresenter = AlertPresenter(delegate: self)
-        statisticService = StatisticServiceImplementation()
     }
     
     // MARK: - Actions

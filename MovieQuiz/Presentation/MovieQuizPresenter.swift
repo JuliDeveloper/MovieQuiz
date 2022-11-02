@@ -16,9 +16,12 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     weak var viewController: MovieQuizViewController?
     var questionFactory: QuestionFactoryProtocol?
     var currentQuestion: QuizQuestion?
+    private var statisticService: StatisticService?
     
     init(viewController: MovieQuizViewController) {
         self.viewController = viewController
+        
+        statisticService = StatisticServiceImplementation()
         
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         questionFactory?.loadData()
