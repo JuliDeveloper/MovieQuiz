@@ -7,26 +7,40 @@
 
 import UIKit
 
-final class MovieQuizPresenter {
+final class MovieQuizPresenter: QuestionFactoryDelegate {
     
     let questionsAmount: Int = 10
     private var currentQuestionIndex: Int = 0
     var correctAnswers: Int = 0
 
-    var currentQuestion: QuizQuestion?
     weak var viewController: MovieQuizViewController?
     var questionFactory: QuestionFactoryProtocol?
+    var currentQuestion: QuizQuestion?
+    
+    init(viewController: MovieQuizViewController) {
+        self.viewController = viewController
+        
+        questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
+        questionFactory?.loadData()
+        viewController.showLoadingIndicator()
+    }
     
     func isLastQuestion() -> Bool {
         currentQuestionIndex == questionsAmount - 1
     }
     
-    func resetQuestionIndex() {
+    func restartGame() {
         currentQuestionIndex = 0
+        correctAnswers = 0
+        questionFactory?.requestNextQuestion()
     }
     
     func switchToNextQuestion() {
         currentQuestionIndex += 1
+    }
+    
+    func didAnswer(isCorrectAnswer: Bool) {
+        correctAnswers += 1
     }
     
     func convert(model: QuizQuestion) -> QuizStepViewModel {
@@ -61,7 +75,7 @@ final class MovieQuizPresenter {
     
     func showNextQuestionOrResults() {
         if isLastQuestion() {
-            guard let statisticService = viewController?.statisticService else { return }
+            guard let statisticService = statisticService else { return }
             statisticService.store(correct: correctAnswers, total: questionsAmount)
             
             let message = "Ваш результат: \(correctAnswers)/\(questionsAmount)\n" +
@@ -91,5 +105,14 @@ final class MovieQuizPresenter {
             guard let self = self else { return }
             self.viewController?.show(quiz: viewModel)
         }
+    }
+    
+    func didLoadDataFromServer() {
+        viewController?.hideLoadingIndicator()
+        questionFactory?.requestNextQuestion()
+    }
+    
+    func didFailToLoadData(with error: Error) {
+        viewController?.showNetworkError(message: error.localizedDescription)
     }
 }
