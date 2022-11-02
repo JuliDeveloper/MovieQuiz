@@ -25,10 +25,12 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
     // MARK: - Actions
     @IBAction func yesButtonClicked() {
         presenter?.yesButtonClicked(correctButton)
+        toggleStateButton(false)
     }
     
     @IBAction func noButtonClicked() {
         presenter?.noButtonClicked(incorrectButton)
+        toggleStateButton(false)
     }
     
     // MARK: - Functions
@@ -57,7 +59,7 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.posterImageView.layer.borderWidth = 0
-
+            self.toggleStateButton(true)
         }
     }
     

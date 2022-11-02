@@ -14,13 +14,13 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     private var correctAnswers: Int = 0
     private var currentQuestionIndex: Int = 0
 
-    private weak var viewController: MovieQuizViewController?
+    private weak var viewController: MovieQuizViewControllerProtocol?
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     private var statisticService: StatisticService?
     
     // MARK: - Lifecycle
-    init(viewController: MovieQuizViewController) {
+    init(viewController: MovieQuizViewControllerProtocol) {
         self.viewController = viewController
         
         statisticService = StatisticServiceImplementation()
@@ -73,7 +73,6 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         let isCorrectAnswer = responseStateModel.isCorrect == currentQuestion.correctAnswer
 
         proceedWithAnswer(isCorrect: isCorrectAnswer)
-        viewController?.toggleStateButton(false)
     }
 
     private func saveStateUserAnswer(userChoice: Bool) -> QuizResultResponseViewModel {
@@ -108,7 +107,6 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self = self else { return }
             self.proceedToNextQuestionOrResults()
-            self.viewController?.toggleStateButton(true)
         }
     }
     
